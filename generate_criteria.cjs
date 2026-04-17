@@ -5,8 +5,11 @@ const wb = xlsx.readFile('Tiêu chuẩn đánh giá chất lượng trung tâm D
 const sheet = wb.Sheets[wb.SheetNames[0]];
 const data = xlsx.utils.sheet_to_json(sheet);
 
-// Dữ liệu từ excel là dạng row theo số sao (5*, 4*, 3*, 2*, 1*). Cần pivot lại.
-const columns = Object.keys(data[0]).filter(k => k !== 'Tiêu chí');
+// Tìm dòng trọng số
+const weightRow = data.find(r => r['Tiêu chí'] && (r['Tiêu chí'].includes('Trọng số') || r['Tiêu chí'].includes('Weight')));
+
+// Lấy danh sách các cột tiêu chí (bỏ cột 'Tiêu chí' và 'Trọng số (%)' nếu nó là cột rác)
+const columns = Object.keys(data[0]).filter(k => k !== 'Tiêu chí' && k !== 'Trọng số (%)');
 
 const criteriaIdMap = {
     "Tuổi đời công ty": "tuoi_doi",
@@ -15,7 +18,7 @@ const criteriaIdMap = {
     "Mối quan hệ các trường Hàn Quốc": "moi_quan_he",
     "Số lượng xuất cảnh": "so_luong_xuat_canh",
     "Năng lực xử lý hồ sơ": "nang_luc_xu_ly",
-    "Kinh nhiệm xử lý hồ sơ": "kinh_nghiem",
+    "Kinh nghiệm xử lý hồ sơ": "kinh_nghiem",
     "Học bổng": "hoc_bong",
     "Bộ máy lãnh đạo": "bo_may",
     "Đội ngũ giáo viên": "giao_vien",
@@ -44,36 +47,65 @@ const questionsMap = {
     "he_thong_bao_cao": "Phụ huynh có được nhận báo cáo định kỳ không và chi tiết thế nào?"
 };
 
-const criteriaArray = columns.map((colStr) => {
-    const id = criteriaIdMap[colStr] || colStr;
+const criteriaArray = columns.map((colStr, index) => {
+    const id = criteriaIdMap[colStr] || colStr.toLowerCase().replace(/\s+/g, '_');
     const title = colStr.replace('Kinh nhiệm', 'Kinh nghiệm');
-    
-    const options = data.map(row => {
-        const starStr = row['Tiêu chí'];
+
+    // Lấy trọng số từ dòng Trọng số, nếu không có thì mặc định 1.0
+    let weight = 1.0;
+    if (weightRow && weightRow[colStr]) {
+        // Có thể là dạng % (0.1) hoặc số nguyên (10)
+        let val = weightRow[colStr];
+        if (typeof val === 'string' && val.includes('%')) {
+            weight = parseFloat(val) / 100;
+        } else {
+            weight = parseFloat(val) || 1.0;
+        }
+    }
+
+    const options = data.filter(row => {
+        const starStr = String(row['Tiêu chí'] || '');
+        // Chỉ lấy các dòng 1*, 2*, 3*, 4*, 5* và không lấy dòng có desc rác
+        return (starStr.includes('1') || starStr.includes('2') || starStr.includes('3') || starStr.includes('4') || starStr.includes('5'))
+            && row[colStr]
+            && row[colStr].toString().trim() !== "1"
+            && row[colStr].toString().trim() !== "2"
+            && row[colStr].toString().trim() !== "3"
+            && row[colStr].toString().trim() !== "4"
+            && row[colStr].toString().trim() !== "5";
+    }).map(row => {
+        const starStr = String(row['Tiêu chí']);
         let stars = 1;
-        if(starStr.includes('5')) stars = 5;
-        else if(starStr.includes('4')) stars = 4;
-        else if(starStr.includes('3')) stars = 3;
-        else if(starStr.includes('2')) stars = 2;
-        
+        if (starStr.includes('5')) stars = 5;
+        else if (starStr.includes('4')) stars = 4;
+        else if (starStr.includes('3')) stars = 3;
+        else if (starStr.includes('2')) stars = 2;
+
         return {
             stars,
             desc: row[colStr] ? row[colStr].toString().trim() : 'Không có thông tin'
         };
-    }).sort((a,b) => a.stars - b.stars);
+    }).sort((a, b) => a.stars - b.stars);
+
+    // Đảm bảo đủ 5 options, nếu thiếu thì fill 'Không có thông tin'
+    const finalOptions = [1, 2, 3, 4, 5].map(s => {
+        const existing = options.find(o => o.stars === s);
+        return existing || { stars: s, desc: 'Không có thông tin' };
+    });
 
     return {
         id,
         title,
         question: questionsMap[id] || `Đánh giá về tiêu chí: ${title}?`,
-        weight: 1.0,  // Default weight
-        options
+        weight: weight,
+        order: index + 1,
+        options: finalOptions
     };
 });
 
-const fileContent = `// Tự động tạo từ parse_excel.cjs
+const fileContent = `// Tự động tạo từ generate_criteria.cjs
 export const CRITERIA_FALLBACK = ${JSON.stringify(criteriaArray, null, 4)};
 `;
 
 fs.writeFileSync('data/criteria.js', fileContent);
-console.log("Successfully wrote data/criteria.js");
+console.log("Successfully updated data/criteria.js with weights from Excel");

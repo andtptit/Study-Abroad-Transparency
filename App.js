@@ -101,7 +101,7 @@ export default function App() {
         <div className="min-h-screen bg-slate-50 text-slate-800 font-sans selection:bg-blue-100">
             <Header step={step} currentQIndex={currentQIndex} totalQuestions={criteriaData.length} />
 
-            <main className={`mx-auto p-4 sm:p-6 lg:p-8 pt-8 sm:pt-12 transition-all duration-500 ${step === 1 ? 'max-w-7xl' : 'max-w-4xl'}`}>
+            <main className={`mx-auto p-4 sm:p-6 lg:p-8 pt-8 sm:pt-12 transition-all duration-500 ${step === 1 ? 'max-w-7xl' : 'max-w-6xl'}`}>
                 {step === 0 && (
                     <BasicInfoStep
                         centerName={centerName}
