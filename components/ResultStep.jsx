@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, LabelList, Cell, Label } from 'recharts';
-import { AlertTriangle, CheckCircle2, RotateCcw, ClipboardList, X } from 'lucide-react';
+import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, ReferenceArea, ReferenceDot, LabelList, Cell, Label } from 'recharts';
+import { AlertTriangle, CheckCircle2, RotateCcw, ClipboardList, X, Star } from 'lucide-react';
 
 export default function ResultStep({ centerName, price, answers, onReset, onUpdateAnswer, criteriaData }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -81,6 +81,41 @@ export default function ResultStep({ centerName, price, answers, onReset, onUpda
         }
         return null;
     };
+    const CustomDot = (props) => {
+        const { cx, cy, fill } = props;
+        return (
+            <g>
+                {/* Pulsing Outer Glow */}
+                <circle cx={cx} cy={cy} r={14} fill={fill} fillOpacity={0.3}>
+                    <animate 
+                        attributeName="r" 
+                        from="10" 
+                        to="18" 
+                        dur="1.5s" 
+                        begin="0s" 
+                        repeatCount="indefinite" 
+                    />
+                    <animate 
+                        attributeName="fillOpacity" 
+                        from="0.5" 
+                        to="0.1" 
+                        dur="1.5s" 
+                        begin="0s" 
+                        repeatCount="indefinite" 
+                    />
+                </circle>
+                {/* Inner point */}
+                <circle 
+                    cx={cx} 
+                    cy={cy} 
+                    r={7} 
+                    fill={fill} 
+                    stroke="#fff" 
+                    strokeWidth={2} 
+                />
+            </g>
+        );
+    };
 
     return (
         <div className="animate-in fade-in zoom-in-95 duration-500">
@@ -93,9 +128,24 @@ export default function ResultStep({ centerName, price, answers, onReset, onUpda
                 <p className="text-lg text-slate-600">
                     Dựa trên thông tin, <span className="font-bold text-slate-900">{centerName}</span> được xếp vào:
                 </p>
-                <div className="mt-4 p-6 rounded-2xl border" style={{ backgroundColor: `${calculateResult.color}10`, borderColor: `${calculateResult.color}30` }}>
-                    <h3 className="text-2xl font-black mb-2" style={{ color: calculateResult.color }}>{calculateResult.statusTitle}</h3>
-                    <p className="text-slate-700 font-medium">{calculateResult.statusDesc}</p>
+
+                <div className="mt-4 p-6 rounded-2xl border flex flex-col items-center gap-4 group" style={{ backgroundColor: `${calculateResult.color}10`, borderColor: `${calculateResult.color}30` }}>
+                    <div className="flex items-center gap-6 sm:gap-10 border-b border-slate-200/50 pb-4 w-full justify-center">
+                        <div className="text-center">
+                            <p className="text-xs uppercase font-bold text-slate-400 tracking-widest mb-1">Chất lượng</p>
+                            <p className="text-2xl font-black text-slate-800 flex items-center gap-1 justify-center">{calculateResult.x} <Star className="w-5 h-5 fill-amber-400 text-amber-400" /></p>
+                        </div>
+                        <div className="w-px h-8 bg-slate-200"></div>
+                        <div className="text-center">
+                            <p className="text-xs uppercase font-bold text-slate-400 tracking-widest mb-1">Chi phí</p>
+                            <p className="text-2xl font-black text-slate-800">{calculateResult.y} <span className="text-sm font-bold text-slate-500">Tr VNĐ</span></p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 className="text-2xl font-black mb-1" style={{ color: calculateResult.color }}>{calculateResult.statusTitle}</h3>
+                        <p className="text-slate-700 font-medium">{calculateResult.statusDesc}</p>
+                    </div>
                 </div>
             </div>
 
@@ -129,6 +179,7 @@ export default function ResultStep({ centerName, price, answers, onReset, onUpda
                                 name="Chất lượng"
                                 domain={[1, 5]}
                                 ticks={[1, 2, 3, 4, 5]}
+                                tickFormatter={(val) => `${val}⭐`}
                                 tick={{ fill: '#64748b', fontWeight: 600 }}
                                 axisLine={{ stroke: '#cbd5e1', strokeWidth: 2 }}
                             >
@@ -152,16 +203,19 @@ export default function ResultStep({ centerName, price, answers, onReset, onUpda
                             <ReferenceLine x={3} stroke="#94a3b8" strokeWidth={2} opacity={0.5} />
                             <ReferenceLine y={65} stroke="#94a3b8" strokeWidth={2} opacity={0.5} />
 
-                            <Scatter name="Trung tâm" data={chartData} shape="circle">
+                            <ReferenceArea x1={0} x2={3} y1={65} y2={130} fill="#ef4444" fillOpacity={0.05} />
+                            <ReferenceArea x1={3} x2={5} y1={65} y2={130} fill="#3b82f6" fillOpacity={0.05} />
+                            <ReferenceArea x1={0} x2={3} y1={0} y2={65} fill="#f59e0b" fillOpacity={0.05} />
+                            <ReferenceArea x1={3} x2={5} y1={0} y2={65} fill="#22c55e" fillOpacity={0.05} />
+
+                             <Scatter 
+                                name="Trung tâm" 
+                                data={chartData} 
+                                shape={<CustomDot />}
+                            >
                                 {chartData.map((entry, index) => (
                                     <Cell key={`cell-${index}`} fill={entry.fill} />
                                 ))}
-                                <LabelList
-                                    dataKey="name"
-                                    position="top"
-                                    offset={15}
-                                    style={{ fill: '#0f172a', fontWeight: 'bold', fontSize: '14px', textShadow: '0 2px 4px rgba(255,255,255,0.8)' }}
-                                />
                             </Scatter>
                         </ScatterChart>
                     </ResponsiveContainer>

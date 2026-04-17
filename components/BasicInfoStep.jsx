@@ -11,7 +11,7 @@ export default function BasicInfoStep({ centerName, setCenterName, price, setPri
                 Định vị Trung tâm Du học<br />bạn đang tìm hiểu
             </h1>
             <p className="text-slate-500 mb-8 text-lg">
-                Trả lời vài câu hỏi để xem trung tâm bạn định chọn là "Mercedes" hay "KIA" trong ngành, và có rủi ro tiềm ẩn nào không.
+                Với mong muốn <span className="font-bold text-blue-600">Minh bạch hóa thị trường du học</span>, công cụ này giúp bạn đối chiếu trung tâm đang tìm hiểu với những quy chuẩn chất lượng khắt khe nhất. Đừng đặt bút ký khi bạn chưa hiểu rõ!
             </p>
 
             <div className="space-y-6">
@@ -26,24 +26,45 @@ export default function BasicInfoStep({ centerName, setCenterName, price, setPri
                     />
                 </div>
 
-                <div>
-                    <div className="flex justify-between items-end mb-2">
-                        <label className="block text-sm font-bold text-slate-700">Tổng chi phí họ báo cho bạn?</label>
-                        <span className="text-2xl font-black text-blue-600">{price} <span className="text-sm font-normal text-slate-500">Triệu VNĐ</span></span>
+                <div className="relative">
+                    <div className="flex justify-between items-end mb-4">
+                        <label className="block text-sm font-bold text-slate-700 uppercase tracking-tight">Tổng chi phí họ báo cho bạn?</label>
+                        <div className="text-right">
+                            <span className={`text-3xl font-black transition-colors ${price === 39 ? 'text-amber-500' : 'text-blue-600'}`}>{price}</span>
+                            <span className="text-sm font-bold text-slate-500 ml-1">Triệu VNĐ</span>
+                        </div>
                     </div>
-                    <input
-                        type="range"
-                        min="0" max="130" step="5"
-                        className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                        value={price}
-                        onChange={(e) => setPrice(Number(e.target.value))}
-                    />
-                    <div className="flex justify-between text-xs text-slate-400 mt-2 font-medium">
-                        <span>0đ</span>
-                        <span>40tr</span>
-                        <span>65tr</span>
-                        <span>90tr</span>
-                        <span>130tr+</span>
+
+                    <div className="relative px-1 pt-2 pb-2">
+                        <input
+                            type="range"
+                            min="0" max="130" step="1"
+                            className={`w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer transition-all duration-300 relative z-20 
+                                ${price === 39 ? 'accent-amber-500 scale-y-110' : 'accent-blue-600'}
+                            `}
+                            value={price}
+                            onChange={(e) => setPrice(Number(e.target.value))}
+                        />
+
+                        {/* Ticks positioned mathematically */}
+                        <div className="relative h-6 mt-4">
+                            {[0, 39, 65, 90, 130].map((val) => {
+                                const isCurrent = price === val;
+                                const isSpecial = val === 39;
+                                return (
+                                    <span
+                                        key={val}
+                                        className={`absolute -translate-x-1/2 text-[10px] font-bold transition-all duration-300 
+                                            ${isCurrent ? (isSpecial ? 'text-amber-600 scale-125' : 'text-blue-600 scale-110') : 'text-slate-400'}
+                                            ${isSpecial ? 'text-amber-500 font-black' : ''}
+                                        `}
+                                        style={{ left: `${(val / 130) * 100}%` }}
+                                    >
+                                        {val === 0 ? '0đ' : val === 130 ? '130tr+' : `${val}tr`}
+                                    </span>
+                                );
+                            })}
+                        </div>
                     </div>
                 </div>
 
