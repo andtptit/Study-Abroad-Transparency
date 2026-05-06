@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { AlertTriangle, CheckCircle2, RotateCcw, ClipboardList, X, Star, MapPin } from 'lucide-react';
+import { saveUserEvaluation, updateEvaluationAuthor } from '../firebase';
 
 const CustomPerceptualMap = ({ price, stars, centerName, color }) => {
     // Chuyển đổi sang số để đảm bảo tính toán chính xác
@@ -125,8 +126,12 @@ const CustomPerceptualMap = ({ price, stars, centerName, color }) => {
     );
 };
 
-export default function ResultStep({ centerName, price, answers, onReset, onUpdateAnswer, criteriaData }) {
+export default function ResultStep({ centerName, price, answers, onReset, onUpdateAnswer, criteriaData, user }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const hasSavedRef = useRef(false);
+
+    const [savedEvalId, setSavedEvalId] = useState(null);
+    const updatedUserRef = useRef(false);
 
     const calculateResult = useMemo(() => {
         if (Object.keys(answers).length === 0) return { stars: 3, price: 65, status: 'unknown' };
@@ -153,17 +158,24 @@ export default function ResultStep({ centerName, price, answers, onReset, onUpda
             status = 'value';
             statusTitle = 'Thông minh';
             statusDesc = 'Ngon - Bổ - Rẻ! Trung tâm có chất lượng tốt nhưng tối ưu được chi phí vận hành nên mức phí rất cạnh tranh.';
-            color = '#22c55e';
-        } else if (averageScore < 3 && price >= 65) {
+            statusTitle = 'Lựa chọn Cao cấp';
+            statusDesc = 'Trung tâm có chi phí cao nhưng đi kèm với chất lượng dịch vụ được đánh giá tốt. Phù hợp nếu bạn ưu tiên sự an tâm và dịch vụ trọn gói.';
+            color = '#3b82f6'; // blue-500
+        } else if (price >= 70 && averageScore < 3.5) {
             status = 'warning';
-            statusTitle = 'Lựa chọn rủi ro';
-            statusDesc = 'Chất lượng dịch vụ thấp nhưng thu phí rất cao (hoặc có nhiều phụ phí ẩn). Hãy cẩn thận bị "Lùa gà"!';
-            color = '#ef4444';
+            statusTitle = 'Lựa chọn Rủi ro';
+            statusDesc = 'CẢNH BÁO: Mức phí khá cao so với mặt bằng chung nhưng chất lượng nhận được chưa tương xứng. Hãy cân nhắc kỹ và tham khảo thêm.';
+            color = '#ef4444'; // red-500
+        } else if (price < 70 && averageScore >= 3.5) {
+            status = 'value';
+            statusTitle = 'Lựa chọn Thông minh';
+            statusDesc = 'TUYỆT VỜI: Trung tâm mang lại giá trị cao với mức chi phí cực kỳ hợp lý. Đây là lựa chọn tối ưu về mặt kinh tế.';
+            color = '#22c55e'; // green-500
         } else {
-            status = 'cheap';
-            statusTitle = 'Lựa chọn phổ thông';
-            statusDesc = 'Chi phí thấp nhưng dịch vụ lỏng lẻo, nhiều rủi ro bị "đem con bỏ chợ". Tiền nào của nấy.';
-            color = '#f59e0b';
+            status = 'economy';
+            statusTitle = 'Lựa chọn Phổ thông';
+            statusDesc = 'Mức chi phí thấp đi kèm chất lượng ở mức cơ bản. Phù hợp cho những bạn muốn tiết kiệm tối đa và có thể tự túc nhiều khâu.';
+            color = '#f59e0b'; // amber-500
         }
 
         return {
@@ -176,6 +188,35 @@ export default function ResultStep({ centerName, price, answers, onReset, onUpda
             qualityLabel: averageScore >= 4 ? 'Rất tốt' : averageScore >= 3 ? 'Tốt' : averageScore >= 2 ? 'Khá' : 'Kém'
         };
     }, [answers, price, criteriaData]);
+
+    useEffect(() => {
+        const saveEval = async () => {
+            if (!hasSavedRef.current && calculateResult.status !== 'unknown') {
+                hasSavedRef.current = true;
+                const evalData = {
+                    centerName: centerName || 'Trung tâm ẩn danh',
+                    price: calculateResult.price,
+                    answers,
+                    finalScore: calculateResult.stars,
+                    segment: calculateResult.status,
+                    isAnonymous: !user,
+                    userId: user ? user.uid : null,
+                };
+                const id = await saveUserEvaluation(evalData, user ? user.profile : null);
+                if (id) {
+                    setSavedEvalId(id);
+                }
+            }
+        };
+        saveEval();
+    }, [calculateResult, centerName, answers, user]);
+
+    useEffect(() => {
+        if (savedEvalId && user && user.profile && !updatedUserRef.current) {
+            updatedUserRef.current = true;
+            updateEvaluationAuthor(savedEvalId, user.profile);
+        }
+    }, [savedEvalId, user]);
 
     return (
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 items-center min-h-[calc(100vh-120px)] p-6 animate-in fade-in duration-700">

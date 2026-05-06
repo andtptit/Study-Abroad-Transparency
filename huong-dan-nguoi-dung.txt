@@ -1,0 +1,53 @@
+==================================================
+  HƯỚNG DẪN SỬ DỤNG - HỆ THỐNG THỔ ĐỊA DU HỌC
+==================================================
+
+Chào mừng bạn đến với K-Edu Radar (Thổ Địa Du Học)! Đây là nền tảng đánh giá minh bạch và uy tín nhất dành cho cộng đồng du học sinh. Dưới đây là hướng dẫn chi tiết để bạn có thể dễ dàng sử dụng các tính năng của hệ thống.
+
+--------------------------------------------------
+PHẦN 1: THỰC HIỆN ĐÁNH GIÁ TRUNG TÂM (KHẢO SÁT)
+--------------------------------------------------
+Để đóng góp ý kiến và giúp đỡ các bạn du học sinh khác, bạn có thể thực hiện bài khảo sát đánh giá chất lượng trung tâm theo các bước sau:
+
+Bước 1: Chọn Trung tâm & Thông tin cơ bản
+- Tại trang chủ, chọn tên Trung tâm mà bạn muốn đánh giá. Nếu trung tâm của bạn không có trong danh sách gợi ý, hãy chọn "Khác" và tự gõ tên trung tâm vào.
+- Kéo thanh trượt để nhập Tổng chi phí (Triệu VNĐ) mà bạn đã chi trả cho trung tâm đó.
+
+Bước 2: Trả lời Câu hỏi (Chấm Sao)
+- Hệ thống sẽ đưa ra các tiêu chí (Ví dụ: Cơ sở vật chất, Giảng viên, Hỗ trợ hồ sơ...).
+- Bạn hãy đọc kỹ từng mô tả của các mức sao (từ 1 đến 5 sao) và chọn mức phù hợp nhất với trải nghiệm thực tế của bạn.
+
+Bước 3: Nhận Kết quả & Phân khúc
+- Sau khi hoàn thành, thuật toán của Radar sẽ tự động tổng hợp điểm số và phân loại trung tâm đó vào 1 trong 4 phân khúc:
+  + Cao cấp (Premium)
+  + Thông minh (Value)
+  + Phổ thông (Standard)
+  + Rủi ro (Warning)
+- Kết quả này giúp bạn nhìn nhận lại chất lượng tương xứng với số tiền đã bỏ ra. Đánh giá của bạn sẽ tự động được lưu vào hệ thống Cộng đồng!
+
+--------------------------------------------------
+PHẦN 2: KHÁM PHÁ CỘNG ĐỒNG RADAR
+--------------------------------------------------
+Trang "Cộng đồng" (hoặc nút "Lịch sử") là nơi tập hợp tất cả các bài đánh giá công tâm từ hàng ngàn du học sinh khác.
+
+1. Tham khảo Đánh giá:
+- Tại trang Cộng đồng, bạn sẽ thấy các bài đánh giá được trình bày dưới dạng thẻ (Card) trực quan, hiển thị rõ Tên trung tâm, Số sao, Chi phí và Phân khúc.
+- Các bài đánh giá mang "Tích xanh kiểm duyệt" là những bài đã được hệ thống xác thực độ uy tín cao.
+
+2. Bộ Lọc Thông Minh:
+- Lọc theo Trung tâm: Bạn có thể chọn tên một trung tâm cụ thể ở thanh tìm kiếm để xem tất cả review về nơi đó trước khi quyết định đăng ký.
+- Lọc Bài Chất Lượng: Nhấn nút "Lọc bài chất lượng" để hệ thống tự động ẩn đi các bài đánh giá rác, chỉ giữ lại những đánh giá được nhiều người thả tim hoặc được bảo chứng tích xanh.
+
+3. Tương tác & Thả Tim (Gamification):
+- Đăng nhập bằng Google: Để có thể tương tác, bạn cần đăng nhập tài khoản Google của mình (Hoàn toàn bảo mật và an toàn).
+- Thả Tim: Nếu bạn thấy một bài đánh giá hữu ích, hãy thả Tim (Heart) cho bài viết đó.
+- Nâng Hạng (Local Guide): Càng đánh giá nhiều và càng nhận được nhiều Tim từ người khác, cấp bậc tài khoản của bạn sẽ càng tăng cao:
+  + Cấp 1: Tân Binh
+  + Cấp 2: Người Đóng Góp
+  + Cấp 3: Thổ Địa
+  + Cấp 4: Chuyên Gia
+  *Lưu ý: Huy hiệu Cấp bậc của bạn sẽ hiển thị công khai ngay cạnh tên của bạn trên mọi bài viết!
+
+--------------------------------------------------
+CHÚC BẠN CÓ NHỮNG TRẢI NGHIỆM TUYỆT VỜI CÙNG THỔ ĐỊA DU HỌC!
+Sự đóng góp của bạn là kim chỉ nam cho thế hệ du học sinh tiếp theo.
