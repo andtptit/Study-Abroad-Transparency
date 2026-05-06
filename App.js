@@ -160,6 +160,7 @@ export default function App() {
                 onLogin={loginWithGoogle}
                 onBack={() => window.location.hash = '#/'}
                 centersList={centersList}
+                criteriaData={criteriaData}
             />
         );
     }

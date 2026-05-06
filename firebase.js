@@ -57,11 +57,24 @@ export const fetchCriteriaData = async () => {
 export const loginWithGoogle = async () => {
     if (!auth) return;
     const provider = new GoogleAuthProvider();
-    const result = await signInWithPopup(auth, provider);
-    if (result.user) {
-        await syncUserProfile(result.user);
+    try {
+        const result = await signInWithPopup(auth, provider);
+        if (result.user) {
+            await syncUserProfile(result.user);
+        }
+        return result;
+    } catch (error) {
+        console.error("Lỗi đăng nhập Google:", error);
+        if (error.code === 'auth/unauthorized-domain') {
+            alert('Lỗi: Tên miền này chưa được cấp phép đăng nhập. Vui lòng thêm tên miền vào Firebase Console > Authentication > Settings > Authorized domains.');
+        } else if (error.code === 'auth/popup-closed-by-user') {
+            // User closed the popup, do nothing
+            console.log('User closed popup');
+        } else {
+            alert('Đã xảy ra lỗi khi đăng nhập: ' + error.message);
+        }
+        return null;
     }
-    return result;
 };
 
 export const logoutUser = () => {
@@ -269,6 +282,49 @@ export const toggleLikeEvaluation = async (evalId, userId, isLiking) => {
         }
     } catch (err) {
         console.error("Error toggling like:", err);
+    }
+};
+
+// Comments
+export const addEvaluationComment = async (evalId, userProfile, content) => {
+    if (!db || !evalId || !userProfile || !content.trim()) return null;
+    try {
+        const commentsRef = collection(db, "evaluations", evalId, "comments");
+        const docRef = await addDoc(commentsRef, {
+            userId: userProfile.uid,
+            userDisplayName: userProfile.displayName || 'Ẩn danh',
+            userPhotoURL: userProfile.photoURL || '',
+            content: content.trim(),
+            createdAt: serverTimestamp()
+        });
+        
+        // Cập nhật số lượng comment trong bài đánh giá gốc
+        const evalRef = doc(db, "evaluations", evalId);
+        await updateDoc(evalRef, {
+            commentsCount: increment(1)
+        });
+
+        return docRef.id;
+    } catch(err) {
+        console.error("Error adding comment:", err);
+        return null;
+    }
+};
+
+export const fetchEvaluationComments = async (evalId) => {
+    if (!db || !evalId) return [];
+    try {
+        const commentsRef = collection(db, "evaluations", evalId, "comments");
+        const q = query(commentsRef, orderBy("createdAt", "asc"));
+        const snapshot = await getDocs(q);
+        const comments = [];
+        snapshot.forEach(doc => {
+            comments.push({ id: doc.id, ...doc.data() });
+        });
+        return comments;
+    } catch(err) {
+        console.error("Error fetching comments:", err);
+        return [];
     }
 };
 
