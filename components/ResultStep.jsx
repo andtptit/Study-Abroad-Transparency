@@ -37,26 +37,26 @@ const CustomPerceptualMap = ({ price, stars, centerName, color }) => {
                     <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-slate-400/50 z-10" />
 
                     {/* Quadrant Labels (Static Corners) */}
-                    <div className="absolute top-3 left-3 flex items-start gap-1.5 px-3 py-2 bg-white/95 rounded-xl border border-green-200 shadow-sm z-20 max-w-[120px]">
-                        <Star size={14} className="text-green-500 fill-green-500 shrink-0 mt-0.5" />
-                        <span className="text-green-600 font-bold text-[11px] sm:text-[12px] leading-tight text-left italic">
-                            Lựa chọn thông minh, giá thấp, chất lượng cao
+                    <div className="absolute top-2 left-2 flex items-start gap-1 p-1.5 bg-white/80 rounded-lg border border-green-100 shadow-sm z-20 max-w-[80px]">
+                        <Star size={10} className="text-green-500 fill-green-500 shrink-0 mt-0.5" />
+                        <span className="text-green-600 font-bold text-[8px] leading-tight text-left italic">
+                            Giá thấp, Chất lượng
                         </span>
                     </div>
-                    <div className="absolute top-3 right-3 flex items-start gap-1.5 px-3 py-2 bg-white/95 rounded-xl border border-blue-200 shadow-sm z-20 max-w-[120px] text-right justify-end">
-                        <span className="text-blue-600 font-bold text-[11px] sm:text-[12px] leading-tight italic">
-                            Lựa chọn cao cấp, giá cao, chất lượng cao
+                    <div className="absolute top-2 right-2 flex items-start gap-1 p-1.5 bg-white/80 rounded-lg border border-blue-100 shadow-sm z-20 max-w-[80px] text-right justify-end">
+                        <span className="text-blue-600 font-bold text-[8px] leading-tight italic">
+                            Giá cao, Chất lượng
                         </span>
                     </div>
-                    <div className="absolute bottom-3 left-3 flex items-start gap-1.5 px-3 py-2 bg-white/95 rounded-xl border border-orange-200 shadow-sm z-20 max-w-[120px]">
-                        <span className="text-orange-600 font-bold text-[11px] sm:text-[12px] leading-tight text-left italic">
-                            Lựa chọn phổ thông, giá thấp, chất lượng thấp
+                    <div className="absolute bottom-12 left-2 flex items-start gap-1 p-1.5 bg-white/80 rounded-lg border border-orange-100 shadow-sm z-20 max-w-[80px]">
+                        <span className="text-orange-600 font-bold text-[8px] leading-tight text-left italic">
+                            Giá thấp, Tiết kiệm
                         </span>
                     </div>
-                    <div className="absolute bottom-3 right-3 flex items-start gap-1.5 px-3 py-2 bg-white/95 rounded-xl border border-red-200 shadow-sm z-20 max-w-[120px] text-right justify-end">
-                        <AlertTriangle size={14} className="text-red-500 shrink-0 mt-0.5" />
-                        <span className="text-red-600 font-bold text-[11px] sm:text-[12px] leading-tight italic">
-                            Lựa chọn rủi ro, giá cao, chất lượng thấp
+                    <div className="absolute bottom-12 right-2 flex items-start gap-1 p-1.5 bg-white/80 rounded-lg border border-red-100 shadow-sm z-20 max-w-[80px] text-right justify-end">
+                        <AlertTriangle size={10} className="text-red-500 shrink-0 mt-0.5" />
+                        <span className="text-red-600 font-bold text-[8px] leading-tight italic">
+                            Giá cao, Cần cân nhắc
                         </span>
                     </div>
                 </div>
@@ -83,8 +83,8 @@ const CustomPerceptualMap = ({ price, stars, centerName, color }) => {
                 ))}
 
                 {/* Axis Titles */}
-                <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Chi phí (Triệu VNĐ)</div>
-                <div className="absolute top-1/2 -left-12 -translate-y-1/2 -rotate-90 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] whitespace-nowrap">Chất lượng (Số sao)</div>
+                <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Chi phí (Triệu VNĐ)</div>
+                <div className="absolute top-1/2 -left-14 -translate-y-1/2 -rotate-90 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] whitespace-nowrap">Chất lượng (Số sao)</div>
 
                 {/* 3. Data Point (Target Indicator & Pin) */}
                 <div 
@@ -100,7 +100,7 @@ const CustomPerceptualMap = ({ price, stars, centerName, color }) => {
 
                     <div className="relative flex flex-col items-center">
                         {/* Tooltip Card */}
-                        <div className="absolute bottom-full mb-12 whitespace-nowrap z-[110] animate-in fade-in slide-in-from-bottom-2 duration-500">
+                        <div className="absolute bottom-full mb-10 whitespace-nowrap z-[110] animate-in fade-in slide-in-from-bottom-2 duration-500">
                             <div className="bg-white/95 backdrop-blur-sm px-4 py-2 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.2)] border border-slate-100 text-center relative">
                                 <h4 className="font-bold text-slate-800 text-sm mb-0.5">{centerName}</h4>
                                 <p className="text-blue-600 font-bold text-[11px] flex items-center justify-center gap-1">
@@ -111,9 +111,9 @@ const CustomPerceptualMap = ({ price, stars, centerName, color }) => {
                         </div>
 
                         {/* Map Pin - Anchored to the dot */}
-                        <div className="relative -translate-y-[6px] -translate-x-1/2 pointer-events-none">
+                        <div className="relative -translate-y-[4px] -translate-x-1/2 pointer-events-none">
                             <MapPin 
-                                size={44} 
+                                size={32} 
                                 className="text-blue-600 fill-blue-600 drop-shadow-xl" 
                                 strokeWidth={2}
                                 style={{ transformOrigin: 'bottom center' }}
@@ -136,9 +136,13 @@ export default function ResultStep({ centerName, price, answers, onReset, onUpda
     const calculateResult = useMemo(() => {
         if (Object.keys(answers).length === 0) return { stars: 3, price: 65, status: 'unknown' };
 
-        const totalWeight = criteriaData.reduce((acc, curr) => acc + (curr.weight || 1.0), 0);
+        const totalWeight = criteriaData.reduce((acc, curr) => {
+            if (curr.type === 'text') return acc;
+            return acc + (curr.weight || 1.0);
+        }, 0);
         const totalScore = criteriaData.reduce((acc, curr) => {
-            const star = answers[curr.id] || 0;
+            if (curr.type === 'text') return acc;
+            const star = typeof answers[curr.id] === 'number' ? answers[curr.id] : 0;
             return acc + (star * (curr.weight || 1.0));
         }, 0);
         
@@ -307,26 +311,34 @@ export default function ResultStep({ centerName, price, answers, onReset, onUpda
                                         <div className="w-1.5 h-1.5 rounded-full bg-blue-500" /> {criterion.title}
                                     </h4>
                                     <div className="space-y-2">
-                                        {criterion.options.map((opt) => {
-                                            const isSelected = answers[criterion.id] === opt.stars;
-                                            return (
-                                                <button
-                                                    key={opt.stars}
-                                                    onClick={() => {
-                                                        onUpdateAnswer(criterion.id, opt.stars);
-                                                    }}
-                                                    className={`w-full text-left p-3 rounded-xl border-2 transition-all flex items-center gap-3
-                                                        ${isSelected ? 'border-blue-500 bg-blue-50 shadow-sm' : 'border-slate-50 bg-slate-50 hover:border-slate-200'}
-                                                    `}
-                                                >
-                                                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${isSelected ? 'bg-blue-600 text-white' : 'bg-white text-slate-400'}`}>
-                                                        {opt.stars}
-                                                    </div>
-                                                    <p className={`text-xs font-bold leading-relaxed flex-1 ${isSelected ? 'text-blue-900' : 'text-slate-500'}`}>{opt.desc}</p>
-                                                    {isSelected && <CheckCircle2 className="text-blue-500 w-5 h-5 flex-shrink-0" />}
-                                                </button>
-                                            );
-                                        })}
+                                        {criterion.type === 'text' ? (
+                                            <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                                                <p className="text-sm font-medium text-slate-600 italic">
+                                                    {answers[criterion.id] || '(Chưa nhập nội dung)'}
+                                                </p>
+                                            </div>
+                                        ) : (
+                                            criterion.options.map((opt) => {
+                                                const isSelected = answers[criterion.id] === opt.stars;
+                                                return (
+                                                    <button
+                                                        key={opt.stars}
+                                                        onClick={() => {
+                                                            onUpdateAnswer(criterion.id, opt.stars);
+                                                        }}
+                                                        className={`w-full text-left p-3 rounded-xl border-2 transition-all flex items-center gap-3
+                                                            ${isSelected ? 'border-blue-500 bg-blue-50 shadow-sm' : 'border-slate-50 bg-slate-50 hover:border-slate-200'}
+                                                        `}
+                                                    >
+                                                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${isSelected ? 'bg-blue-600 text-white' : 'bg-white text-slate-400'}`}>
+                                                            {opt.stars}
+                                                        </div>
+                                                        <p className={`text-xs font-bold leading-relaxed flex-1 ${isSelected ? 'text-blue-900' : 'text-slate-500'}`}>{opt.desc}</p>
+                                                        {isSelected && <CheckCircle2 className="text-blue-500 w-5 h-5 flex-shrink-0" />}
+                                                    </button>
+                                                );
+                                            })
+                                        )}
                                     </div>
                                 </div>
                             ))}

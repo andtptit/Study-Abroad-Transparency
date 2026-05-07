@@ -103,6 +103,24 @@ export default function CommunityFeed({ user, onLogin, onBack, centersList, crit
         });
     };
 
+    const getSafeScore = (ev) => {
+        const rawScore = parseFloat(ev.finalScore);
+        if (!isNaN(rawScore) && rawScore !== null) return rawScore;
+        
+        // Recalculate if NaN
+        if (!ev.answers || !criteriaData) return 0;
+        const totalWeight = criteriaData.reduce((acc, curr) => {
+            if (curr.type === 'text') return acc;
+            return acc + (curr.weight || 1.0);
+        }, 0);
+        const totalScore = criteriaData.reduce((acc, curr) => {
+            if (curr.type === 'text') return acc;
+            const star = typeof ev.answers?.[curr.id] === 'number' ? ev.answers[curr.id] : 0;
+            return acc + (star * (curr.weight || 1.0));
+        }, 0);
+        return totalWeight > 0 ? Number((totalScore / totalWeight).toFixed(2)) : 0;
+    };
+
     return (
         <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 pt-8 animate-in fade-in duration-500">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-8">
@@ -211,7 +229,7 @@ export default function CommunityFeed({ user, onLogin, onBack, centersList, crit
                                     </h3>
                                     <div className="flex items-center gap-1 bg-white px-2 py-1.5 rounded-lg shrink-0 border border-amber-100 shadow-sm">
                                         <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                                        <span className="font-bold text-amber-700 text-sm">{ev.finalScore}</span>
+                                        <span className="font-bold text-amber-700 text-sm">{getSafeScore(ev)}</span>
                                     </div>
                                 </div>
                                 

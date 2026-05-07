@@ -17,15 +17,15 @@ export const CRITERIA_FALLBACK = [
             },
             {
                 "stars": 3,
-                "desc": "3-5 năm"
+                "desc": "4-5 năm"
             },
             {
                 "stars": 4,
-                "desc": "5-8 năm"
+                "desc": "6-7 năm"
             },
             {
                 "stars": 5,
-                "desc": "Trên 8 năm"
+                "desc": "8 năm trở lên"
             }
         ]
     },
@@ -376,5 +376,15 @@ export const CRITERIA_FALLBACK = [
                 "desc": "Quy mô & Vị trí: Tòa nhà chính chủ gồm Lớp+KTX, cách công viên và trung tâm thương mại dưới 1km.\r\nNội thất & Tiện ích: Đầy đủ như 4* và có thêm thư viện\r\nKhông gian: Có sân bóng, khu vận động thể thao và mảng xanh."
             }
         ]
+    },
+    {
+        "id": "cam_nhan",
+        "title": "Cảm nhận cá nhân",
+        "question": "Cảm nhận của bạn về trung tâm đã chọn (không bắt buộc)",
+        "weight": 0,
+        "order": 14,
+        "type": "text",
+        "required": false,
+        "options": []
     }
 ];

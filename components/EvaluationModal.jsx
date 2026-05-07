@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { X, ShieldCheck, Heart, MessageCircle, Send, Loader2 } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { X, ShieldCheck, Heart, MessageCircle, Send, Loader2, MessageSquare } from 'lucide-react';
 import { fetchEvaluationComments, addEvaluationComment, loginWithGoogle } from '../firebase';
 
 export default function EvaluationModal({ evaluation, criteriaData, currentUser, onClose, onCommentAdded }) {
@@ -7,6 +7,24 @@ export default function EvaluationModal({ evaluation, criteriaData, currentUser,
     const [newComment, setNewComment] = useState('');
     const [isLoadingComments, setIsLoadingComments] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const displayScore = useMemo(() => {
+        if (!evaluation || !criteriaData) return 0;
+        const rawScore = parseFloat(evaluation.finalScore);
+        if (!isNaN(rawScore) && rawScore !== null) return rawScore;
+        
+        // Recalculate if NaN
+        const totalWeight = criteriaData.reduce((acc, curr) => {
+            if (curr.type === 'text') return acc;
+            return acc + (curr.weight || 1.0);
+        }, 0);
+        const totalScore = criteriaData.reduce((acc, curr) => {
+            if (curr.type === 'text') return acc;
+            const star = typeof evaluation.answers?.[curr.id] === 'number' ? evaluation.answers[curr.id] : 0;
+            return acc + (star * (curr.weight || 1.0));
+        }, 0);
+        return totalWeight > 0 ? Number((totalScore / totalWeight).toFixed(2)) : 0;
+    }, [evaluation, criteriaData]);
 
     useEffect(() => {
         if (!evaluation || !currentUser) return;
@@ -133,7 +151,7 @@ export default function EvaluationModal({ evaluation, criteriaData, currentUser,
                             </div>
                         </div>
                         <div className="shrink-0 bg-white px-5 py-3 rounded-2xl shadow-sm border border-slate-100 text-center">
-                            <div className="text-3xl font-black text-amber-500">{evaluation.finalScore}</div>
+                            <div className="text-3xl font-black text-amber-500">{displayScore}</div>
                             <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Tổng điểm</div>
                         </div>
                     </div>
@@ -144,6 +162,23 @@ export default function EvaluationModal({ evaluation, criteriaData, currentUser,
                     </h4>
                     <div className="space-y-4 mb-10">
                         {criteriaData.map(criterion => {
+                            if (criterion.type === 'text') {
+                                const textAnswer = evaluation.answers[criterion.id];
+                                if (!textAnswer) return null;
+                                return (
+                                    <div key={criterion.id} className="relative mt-8 pt-6 border-t border-slate-100">
+                                        <div className="flex items-center gap-2 mb-3">
+                                            <MessageSquare className="w-5 h-5 text-blue-500" />
+                                            <span className="font-bold text-slate-800 text-base">{criterion.title}</span>
+                                        </div>
+                                        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 relative">
+                                            <div className="absolute top-0 left-6 -mt-2 w-4 h-4 bg-slate-50 border-t border-l border-slate-200 rotate-45"></div>
+                                            <p className="text-slate-600 text-[15px] font-medium leading-relaxed" style={{ whiteSpace: 'pre-line' }}>{textAnswer}</p>
+                                        </div>
+                                    </div>
+                                );
+                            }
+
                             const score = evaluation.answers[criterion.id] || 0;
                             const percentage = (score / 5) * 100;
                             return (

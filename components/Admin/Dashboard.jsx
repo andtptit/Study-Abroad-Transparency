@@ -235,6 +235,24 @@ export default function AdminDashboard({ onLogout }) {
         }
     };
 
+    const getSafeScore = (ev) => {
+        const rawScore = parseFloat(ev.finalScore);
+        if (!isNaN(rawScore) && rawScore !== null) return rawScore;
+        
+        // Recalculate if NaN
+        if (!ev.answers || !criteria) return 0;
+        const totalWeight = criteria.reduce((acc, curr) => {
+            if (curr.type === 'text') return acc;
+            return acc + (curr.weight || 1.0);
+        }, 0);
+        const totalScore = criteria.reduce((acc, curr) => {
+            if (curr.type === 'text') return acc;
+            const star = typeof ev.answers?.[curr.id] === 'number' ? ev.answers[curr.id] : 0;
+            return acc + (star * (curr.weight || 1.0));
+        }, 0);
+        return totalWeight > 0 ? Number((totalScore / totalWeight).toFixed(2)) : 0;
+    };
+
     return (
         <div className="min-h-screen bg-slate-100 p-4 sm:p-8 font-sans">
             <div className="max-w-5xl mx-auto">
@@ -603,7 +621,7 @@ export default function AdminDashboard({ onLogout }) {
                                                     </span>
                                                 </td>
                                                 <td className="p-4 text-sm font-bold text-slate-800">
-                                                    {ev.finalScore} ⭐
+                                                    {getSafeScore(ev)} ⭐
                                                 </td>
                                                 <td className="p-4 text-sm font-medium text-slate-600">
                                                     {ev.price}tr

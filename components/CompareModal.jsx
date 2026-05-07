@@ -117,6 +117,7 @@ export default function CompareModal({ compareList, criteriaData, currentUser, o
                         {/* Criteria Breakdown A */}
                         <div className="space-y-6">
                             {criteriaData.map(criterion => {
+                                if (criterion.type === 'text') return null;
                                 const score = evalA.answers[criterion.id] || 0;
                                 return (
                                     <div key={criterion.id} className="text-center">
@@ -178,6 +179,7 @@ export default function CompareModal({ compareList, criteriaData, currentUser, o
                         {/* Criteria Breakdown B */}
                         <div className="space-y-6">
                             {criteriaData.map(criterion => {
+                                if (criterion.type === 'text') return null;
                                 const score = evalB.answers[criterion.id] || 0;
                                 return (
                                     <div key={criterion.id} className="text-center">
